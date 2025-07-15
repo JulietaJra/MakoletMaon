@@ -191,11 +191,16 @@
       }
     }
     .today-icon {
+  display: inline-block;
+  margin-right: 0.4rem;
+  margin-left: 0;
+  color: var(--primary-dark);
+  font-size: 1.1rem;
+  vertical-align: middle;
+}
+  .flipped {
+    transform: scaleX(-1);
     display: inline-block;
-    margin-left: 0.4rem;
-    color: var(--primary-dark);
-    font-size: 1.1rem;
-    vertical-align: middle;
   }
 </style>
 </head>
@@ -244,7 +249,7 @@
       const now = new Date();
       const currentDay = days[now.getDay()];
       const isToday = day === currentDay;
-      const icon = isToday ? '<span class="today-icon">&#10148;</span> ' : '';
+      const icon = isToday ? '<span class="today-icon flipped">&#10148;</span> ' : '';
       const parts = [];
       for (let i = 0; i < times.length; i += 2) {
         if (times[i] && times[i + 1]) {
@@ -316,7 +321,7 @@
     setInterval(updateStatus, 60000);
   </script>
   <footer style="text-align: center; font-size: 0.75rem; color: #7b6a58; padding: 0.5rem 0; position: relative; margin-top: 3rem;">
-    כל הזכויות שמורות לחולייטה חרמוי 052-441-5166
+    כל הזכויות שמורות לחולייטה חרמוי <a href="tel:0524415166" style="color: inherit; text-decoration: underline dotted;">052-441-5166</a>
   </footer>
 </body>
 </html>
