@@ -60,6 +60,12 @@
       border-color: red;
       background-color: #ffe6e6;
     }
+    .time-row {
+      margin-bottom: 0.5rem;
+    }
+    .time-row label {
+      margin-inline-end: 1rem;
+    }
     #editSection {
       display: none;
       margin-top: 2rem;
@@ -184,8 +190,10 @@
         container.innerHTML += `
           <h4>${day}</h4>
           ${[0,1,2].map(i => `
-            <label>פתיחה ${i+1}: <input class="time-text" type="text" pattern="^\\d{2}:\\d{2}$" name="${day}-open${i+1}" value="${values[i*2] || ''}" required></label>
-            <label>סגירה ${i+1}: <input class="time-text" type="text" pattern="^\\d{2}:\\d{2}$" name="${day}-close${i+1}" value="${values[i*2+1] || ''}" required></label><br>`).join("")}
+            <div class="time-row">
+              <label>מ־<input class="time-text" type="text" pattern="^\\d{2}:\\d{2}$" name="${day}-open${i+1}" value="${values[i*2] || ''}" required></label>
+              <label>עד <input class="time-text" type="text" pattern="^\\d{2}:\\d{2}$" name="${day}-close${i+1}" value="${values[i*2+1] || ''}" required></label>
+            </div>`).join("")}
         `;
       });
     }
