@@ -28,6 +28,93 @@
       margin-bottom: 1rem;
       color: var(--primary);
     }
+#status {
+      height: 20vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: url('https://www.transparenttextures.com/patterns/paper-fibers.png') repeat var(--accent-bg);
+      margin-bottom: 1rem;
+      border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .open-now, .closed-now {
+      font-weight: 700;
+      font-size: 3rem;
+      line-height: 1.4;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-align: center;
+      flex-direction: column;
+    }
+
+    .open-now::before {
+      content: "\1F7E2";
+      font-size: 2rem;
+    }
+
+    .closed-now::before {
+      content: "\1F534";
+      font-size: 2rem;
+    }
+
+    .open-now {
+      color: var(--primary);
+    }
+
+    .closed-now {
+      color: #a94442;
+    }
+    #scheduleList {
+      background: var(--surface);
+      padding: 1rem;
+      border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      margin-bottom: 2rem;
+    }
+
+    .day-row {
+      margin-bottom: 0.75rem;
+      font-size: 1.15rem;
+      line-height: 1.6;
+    }
+    .highlight-open {
+      background-color: #d4edda;
+      border-radius: 4px;
+      padding: 0.3rem;
+      display: inline-block;
+    }
+    .highlight-closed {
+      background-color: #fff8d5;
+      border-radius: 4px;
+      padding: 0.3rem;
+      display: inline-block;
+    }
+      #editSection {
+      display: none;
+      margin-top: 2rem;
+      background: var(--surface);
+      padding: 1rem;
+      border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    input[type="time"] {
+      width: 100%;
+      max-width: 120px;
+      padding: 0.5rem;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      margin: 0.25rem;
+      background: var(--main-bg);
+      color: var(--text-color);
+    }
+
     .admin-button {
       position: fixed;
       bottom: 4rem;
@@ -42,75 +129,74 @@
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
       transition: background 0.3s ease;
     }
+
     .admin-button:hover {
       background: var(--primary-dark);
     }
-    input.time-text {
-      width: 80px;
-      padding: 0.5rem;
-      border: 1px solid var(--border-color);
-      border-radius: 6px;
-      margin: 0.25rem;
-      background: var(--main-bg);
-      color: var(--text-color);
-      direction: ltr;
-      text-align: center;
+
+    form button[type="submit"] {
+      background: var(--primary);
+      color: white;
+      padding: 0.6rem 1.2rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 500;
+      margin-top: 1rem;
     }
-    input.time-text:invalid {
-      border-color: red;
-      background-color: #ffe6e6;
-    }
-    .time-row {
-      margin-bottom: 0.5rem;
-    }
-    .time-row label {
-      margin-inline-end: 1rem;
-    }
-    #editSection {
-      display: none;
-      margin-top: 2rem;
-      background: var(--surface);
-      padding: 1rem;
-      border-radius: 12px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    }
-    #status {
-      text-align: center;
-      font-size: 1.3rem;
-      font-weight: bold;
-      margin: 1rem 0;
-      color: var(--primary-dark);
-    }
-    #scheduleList {
-      margin-top: 2rem;
-      background: var(--surface);
-      padding: 1rem;
-      border-radius: 12px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    }
-    .day-row {
-      margin-bottom: 0.75rem;
-      font-size: 1.15rem;
-    }
-    .highlight-open {
-      background-color: #d4edda;
-      border-radius: 4px;
-      padding: 0.3rem;
+
+    label {
+      margin: 0.25rem 0.5rem;
       display: inline-block;
     }
-    .highlight-closed {
-      background-color: #fff8d5;
-      border-radius: 4px;
-      padding: 0.3rem;
-      display: inline-block;
-    }
+
     .today-icon {
       display: inline-block;
       margin-right: 0.4rem;
       color: var(--primary-dark);
       font-size: 1.1rem;
       vertical-align: middle;
+    }
+
+    .flipped {
       transform: scaleX(-1);
+      display: inline-block;
+    }
+
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 1.6rem;
+      }
+
+      .open-now, .closed-now {
+        font-size: 2.2rem;
+      }
+
+      .day-row {
+        font-size: 1rem;
+      }
+
+      #status {
+        height: auto;
+        padding: 2rem 1rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      input[type="time"] {
+        width: 100%;
+        max-width: 100%;
+      }
+
+      label {
+        display: block;
+        margin: 0.5rem 0;
+      }
+
+      .admin-button {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+      }
     }
   </style>
 </head>
@@ -118,29 +204,34 @@
   <h1>מכולת מעון</h1>
   <div id="status"></div>
   <div id="scheduleList"></div>
-  <button class="admin-button" id="editToggle" onclick="toggleEdit()">🔒 עריכת שעות</button>
+
+  <button class="admin-button" onclick="toggleEdit()">🔒 עריכת שעות</button>
   <div id="editSection">
+    <h2>עריכת שעות פתיחה</h2>
     <form onsubmit="saveSchedule(event)">
       <div id="editForm"></div>
       <button type="submit">שמירה</button>
     </form>
   </div>
+  <footer style="text-align: center; font-size: 0.75rem; color: #7b6a58; padding: 0.5rem 0; position: relative; margin-top: 3rem;">
+    כל הזכויות שמורות לחולייטה חרמוי <a href="tel:052-441-5166" style="color: inherit; text-decoration: underline dotted;">052-441-5166</a>
+  </footer>
+
   <script>
     const days = ["ראשון", "שני", "שלישי", "רביעי", "חמישי", "שישי", "שבת"];
     let schedule = {};
 
-    async function loadSchedule() {
-      try {
-        const res = await fetch('schedule.json');
-        if (!res.ok) throw new Error('Response not ok');
-        schedule = await res.json();
+    fetch('schedule.json')
+      .then(response => response.json())
+      .then(data => {
+        schedule = data;
         updateScheduleList();
         updateStatus();
-      } catch (e) {
-        document.getElementById("scheduleList").innerHTML = '<div style="color:red">שגיאה בטעינת לוח השעות</div>';
-        console.error("שגיאה בטעינת לוח השעות:", e);
-      }
-    }
+        setInterval(updateStatus, 60000);
+      })
+      .catch(err => {
+        console.error("שגיאה בטעינת לוח השעות:", err);
+      });
 
     function isOpenNow() {
       const now = new Date();
@@ -148,8 +239,10 @@
       const currentTime = now.toTimeString().slice(0,5);
       const ranges = schedule[currentDay] || [];
       for (let i = 0; i < ranges.length; i += 2) {
-        if (ranges[i] && ranges[i+1] && currentTime >= ranges[i] && currentTime <= ranges[i+1]) {
-          return { open: true, until: ranges[i+1] };
+        const start = ranges[i];
+        const end = ranges[i+1];
+        if (start && end && currentTime >= start && currentTime <= end) {
+          return { open: true, until: end };
         }
       }
       return { open: false };
@@ -158,36 +251,51 @@
     function getNextOpening() {
       const now = new Date();
       const currentTime = now.toTimeString().slice(0,5);
-      const todayIndex = now.getDay();
       for (let offset = 0; offset < 7; offset++) {
-        const dayIndex = (todayIndex + offset) % 7;
+        const dayIndex = (now.getDay() + offset) % 7;
         const dayName = days[dayIndex];
         const ranges = schedule[dayName] || [];
         for (let i = 0; i < ranges.length; i += 2) {
-          if (ranges[i]) {
-            if (offset === 0 && ranges[i] > currentTime) {
-              return { day: "היום", time: ranges[i] };
-            } else if (offset > 0) {
-              return { day: dayName, time: ranges[i] };
-            }
+          const start = ranges[i];
+          if (start && (offset > 0 || start > currentTime)) {
+            return offset === 0
+              ? `היא תיפתח שוב היום ב־${start}`
+              : `היא תיפתח ביום ${dayName} ב־${start}`;
           }
         }
       }
-      return null;
+      return "אין שעות פתיחה קרובות";
+    }
+
+    function formatRanges(day, times) {
+      const now = new Date();
+      const currentDay = days[now.getDay()];
+      const isToday = day === currentDay;
+      const icon = isToday ? '<span class="today-icon flipped">➤</span> ' : '';
+      const parts = [];
+      for (let i = 0; i < times.length; i += 2) {
+        if (times[i] && times[i + 1]) {
+          parts.push(`${times[i]} - ${times[i + 1]}`);
+        }
+      }
+      const content = `${icon}${day}: ${parts.length ? parts.join(", ") : "סגור"}`;
+      const rowClass = isToday ? (isOpenNow().open ? 'highlight-open' : 'highlight-closed') : '';
+      return `<div class="day-row ${rowClass}">${content}</div>`;
+    }
+
+    function updateScheduleList() {
+      const container = document.getElementById("scheduleList");
+      container.innerHTML = days.map(day => formatRanges(day, schedule[day] || [])).join("");
     }
 
     function updateStatus() {
+      const { open, until } = isOpenNow();
       const statusDiv = document.getElementById("status");
-      const nowStatus = isOpenNow();
-      if (nowStatus.open) {
-        statusDiv.innerHTML = `<p class='open-now'>המכולת פתוחה עכשיו (עד ${nowStatus.until})</p>`;
+      if (open) {
+        statusDiv.innerHTML = `<p class='open-now'>המכולת פתוחה עכשיו (עד ${until})</p>`;
       } else {
         const next = getNextOpening();
-        if (next) {
-          statusDiv.innerHTML = `<p class='closed-now'>המכולת סגורה עכשיו<br>היא תיפתח שוב ${next.day} ב־${next.time}</p>`;
-        } else {
-          statusDiv.innerHTML = "<p class='closed-now'>המכולת סגורה כעת.</p>";
-        }
+        statusDiv.innerHTML = `<p class='closed-now'>המכולת סגורה עכשיו<br>${next}</p>`;
       }
     }
 
@@ -195,7 +303,6 @@
       const pass = prompt("הכנס סיסמה לעדכון שעות:");
       if (pass === "1234") {
         document.getElementById("editSection").style.display = "block";
-        document.getElementById("editToggle").style.display = "none";
         renderEditForm();
       } else {
         alert("סיסמה שגויה.");
@@ -210,10 +317,8 @@
         container.innerHTML += `
           <h4>${day}</h4>
           ${[0,1,2].map(i => `
-            <div class="time-row">
-              <label>מ־<input class="time-text" type="text" name="${day}-open${i+1}" value="${values[i*2] || ''}" pattern="^(\d{1,2}):(\d{2})$" required></label>
-              <label>עד <input class="time-text" type="text" name="${day}-close${i+1}" value="${values[i*2+1] || ''}" pattern="^(\d{1,2}):(\d{2})$" ${values[i*2] ? 'required' : ''}></label>
-            </div>`).join("")}
+            <label>פתיחה ${i+1}: <input type="time" name="${day}-open${i+1}" value="${values[i*2]}"></label>
+            <label>סגירה ${i+1}: <input type="time" name="${day}-close${i+1}" value="${values[i*2+1]}"></label><br>`).join("")}
         `;
       });
     }
@@ -221,63 +326,25 @@
     function saveSchedule(e) {
       e.preventDefault();
       const form = e.target;
-      const inputs = form.querySelectorAll("input.time-text");
-      let isValid = true;
-      const timeRegex = /^(\d{1,2}):(\d{2})$/;
-      inputs.forEach(input => {
-        const val = input.value.trim();
-        const match = timeRegex.exec(val);
-        if (!val) return;
-        if (!match || +match[1] > 23 || +match[2] > 59) {
-          input.setCustomValidity("שעה לא חוקית");
-          isValid = false;
-        } else {
-          input.setCustomValidity("");
-        }
-      });
-      if (!isValid) {
-        alert("יש שדות שגויים. תקן לפני השמירה.");
-        return;
-      }
       days.forEach(day => {
         schedule[day] = [0,1,2].flatMap(i => [
           form[`${day}-open${i+1}`].value,
           form[`${day}-close${i+1}`].value
         ]);
       });
-      fetch("https://hook.eu1.make.com/r3a9k52is91lr2dvmtru81dh32d86sgm", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(schedule)
-      });
-      document.getElementById("editSection").style.display = "none";
-      document.getElementById("editToggle").style.display = "inline-block";
       updateScheduleList();
       updateStatus();
-      alert("השעות נשמרו!");
-    }
 
-    function updateScheduleList() {
-      const container = document.getElementById("scheduleList");
-      const now = new Date();
-      const currentDay = days[now.getDay()];
-      container.innerHTML = days.map(day => {
-        const times = schedule[day] || [];
-        const parts = [];
-        for (let i = 0; i < times.length; i += 2) {
-          if (times[i] && times[i+1]) {
-            parts.push(`${times[i]} - ${times[i+1]}`);
-          }
-        }
-        const isToday = day === currentDay;
-        const icon = isToday ? '<span class="today-icon">➤</span> ' : '';
-        const rowClass = isToday ? (isOpenNow().open ? 'highlight-open' : 'highlight-closed') : '';
-        return `<div class="day-row ${rowClass}">${icon}${day}: ${parts.length ? parts.join(", ") : "סגור"}</div>`;
-      }).join("");
+      fetch("https://hook.eu1.make.com/r3a9k52is91lr2dvmtru81dh32d86sgm", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(schedule)
+      })
+      .then(res => res.ok ? alert("השעות נשמרו ונשלחו!") : alert("שמירה נכשלה"))
+      .catch(() => alert("שגיאה בשליחה לשרת"));
     }
-
-    loadSchedule();
-    setInterval(updateStatus, 60000);
   </script>
 </body>
 </html>
