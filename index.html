@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
-<head>
   <meta charset="UTF-8">
   <title>מכולת מעון</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -111,15 +110,26 @@
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
 
-    input[type="time"] {
-      width: 100%;
-      max-width: 120px;
+    input.time-text {
+      width: 80px;
       padding: 0.5rem;
       border: 1px solid var(--border-color);
       border-radius: 6px;
       margin: 0.25rem;
       background: var(--main-bg);
       color: var(--text-color);
+      direction: ltr;
+      text-align: center;
+    }
+
+    input.time-text:invalid {
+      border-color: red;
+      background-color: #ffe6e6;
+    }
+
+    input.time-text:valid {
+      border-color: var(--border-color);
+      background-color: var(--main-bg);
     }
 
     .admin-button {
@@ -190,7 +200,7 @@
     }
 
     @media (max-width: 480px) {
-      input[type="time"] {
+      input.time-text {
         width: 100%;
         max-width: 100%;
       }
