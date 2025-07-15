@@ -86,8 +86,18 @@
       line-height: 1.6;
     }
 
-    .day-row strong {
-      color: var(--primary);
+    .highlight-open {
+      background-color: #d4edda;
+      border-radius: 4px;
+      padding: 0.3rem;
+      display: inline-block;
+    }
+
+    .highlight-closed {
+      background-color: #fff8d5;
+      border-radius: 4px;
+      padding: 0.3rem;
+      display: inline-block;
     }
 
     #editSection {
@@ -112,7 +122,7 @@
 
     .admin-button {
       position: fixed;
-      bottom: 1rem;
+      bottom: 4rem;
       left: 1rem;
       background: var(--primary);
       color: white;
@@ -180,7 +190,14 @@
         font-size: 0.9rem;
       }
     }
-  </style>
+    .today-icon {
+    display: inline-block;
+    margin-left: 0.4rem;
+    color: var(--primary-dark);
+    font-size: 1.1rem;
+    vertical-align: middle;
+  }
+</style>
 </head>
 <body>
   <h1>מכולת מעון</h1>
@@ -208,21 +225,6 @@
       "שבת":  ["","","","","",""]
     };
 
-    function formatRanges(day, times) {
-      const parts = [];
-      for (let i = 0; i < times.length; i += 2) {
-        if (times[i] && times[i+1]) {
-          parts.push(`${times[i]} - ${times[i+1]}`);
-        }
-      }
-      return `<div class="day-row"><strong>${day}:</strong> ${parts.length ? parts.join(", ") : "סגור"}</div>`;
-    }
-
-    function updateScheduleList() {
-      const container = document.getElementById("scheduleList");
-      container.innerHTML = days.map(day => formatRanges(day, schedule[day])).join("");
-    }
-
     function isOpenNow() {
       const now = new Date();
       const currentDay = days[now.getDay()];
@@ -236,6 +238,27 @@
         }
       }
       return { open: false };
+    }
+
+    function formatRanges(day, times) {
+      const now = new Date();
+      const currentDay = days[now.getDay()];
+      const isToday = day === currentDay;
+      const icon = isToday ? '<span class="today-icon">&#10148;</span> ' : '';
+      const parts = [];
+      for (let i = 0; i < times.length; i += 2) {
+        if (times[i] && times[i + 1]) {
+          parts.push(`${times[i]} - ${times[i + 1]}`);
+        }
+      }
+      const content = `${icon}${day}: ${parts.length ? parts.join(", ") : "סגור"}`;
+      const rowClass = isToday ? (isOpenNow().open ? 'highlight-open' : 'highlight-closed') : '';
+      return `<div class="day-row ${rowClass}">${content}</div>`;
+    }
+
+    function updateScheduleList() {
+      const container = document.getElementById("scheduleList");
+      container.innerHTML = days.map(day => formatRanges(day, schedule[day])).join("");
     }
 
     function updateStatus() {
@@ -292,8 +315,8 @@
     updateStatus();
     setInterval(updateStatus, 60000);
   </script>
-<footer style="text-align: center; font-size: 0.8rem; color: #7b6a58; padding: 1rem 0; position: fixed; bottom: 0; width: 100%; background: var(--main-bg);">
-  העמוד נוצר על ידי חולייטה חרמוי 052-441-5166
-</footer>
+  <footer style="text-align: center; font-size: 0.75rem; color: #7b6a58; padding: 0.5rem 0; position: relative; margin-top: 3rem;">
+    כל הזכויות שמורות לחולייטה חרמוי 052-441-5166
+  </footer>
 </body>
 </html>
