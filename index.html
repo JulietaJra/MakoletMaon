@@ -38,41 +38,37 @@
       margin-bottom: 1rem;
       border-radius: 12px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .open-now, .closed-now {
+      font-weight: 700;
+      font-size: 2rem;
+      line-height: 1.4;
+      margin: 0;
     }
 
     .open-now {
       color: var(--primary);
-      font-weight: 700;
-      font-size: 2rem;
-      text-align: center;
     }
 
     .closed-now {
       color: #d32f2f;
-      font-weight: 700;
-      font-size: 2rem;
-      text-align: center;
     }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 1rem;
+    #scheduleList {
       background: var(--surface);
+      padding: 1rem;
       border-radius: 12px;
-      overflow: hidden;
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      margin-bottom: 2rem;
     }
 
-    th, td {
-      border: 1px solid var(--border-color);
-      padding: 0.75rem;
-      text-align: center;
-    }
-
-    th {
-      background-color: #f0f4f8;
-      font-weight: 500;
+    .day-row {
+      margin-bottom: 0.75rem;
+      font-size: 1.1rem;
+      line-height: 1.6;
     }
 
     #editSection {
@@ -85,7 +81,8 @@
     }
 
     input[type="time"] {
-      width: 120px;
+      width: 100%;
+      max-width: 120px;
       padding: 0.5rem;
       border: 1px solid var(--border-color);
       border-radius: 6px;
@@ -127,17 +124,39 @@
       display: inline-block;
     }
 
-    @media (max-width: 600px) {
-      input[type="time"] {
-        width: 100px;
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 1.5rem;
       }
+
+      .open-now, .closed-now {
+        font-size: 1.6rem;
+      }
+
+      .day-row {
+        font-size: 1rem;
+      }
+
+      #status {
+        height: auto;
+        padding: 2rem 1rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      input[type="time"] {
+        width: 100%;
+        max-width: 100%;
+      }
+
       label {
         display: block;
         margin: 0.5rem 0;
       }
 
-      .open-now, .closed-now {
-        font-size: 1.6rem;
+      .admin-button {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
       }
     }
   </style>
@@ -145,12 +164,7 @@
 <body>
   <h1>מכולת מעון</h1>
   <div id="status"></div>
-  <table id="scheduleTable">
-    <thead>
-      <tr><th>יום</th><th>פתיחה 1</th><th>סגירה 1</th><th>פתיחה 2</th><th>סגירה 2</th><th>פתיחה 3</th><th>סגירה 3</th></tr>
-    </thead>
-    <tbody></tbody>
-  </table>
+  <div id="scheduleList"></div>
 
   <button class="admin-button" onclick="toggleEdit()">🔒 עריכת שעות</button>
   <div id="editSection">
@@ -173,18 +187,19 @@
       "שבת":  ["","","","","",""]
     };
 
-    function formatTime(str) {
-      return str ? str : "—";
+    function formatRanges(day, times) {
+      const parts = [];
+      for (let i = 0; i < times.length; i += 2) {
+        if (times[i] && times[i+1]) {
+          parts.push(`${times[i]} - ${times[i+1]}`);
+        }
+      }
+      return `<div class="day-row">${day}: ${parts.length ? parts.join(", ") : "סגור"}</div>`;
     }
 
-    function updateTable() {
-      const tbody = document.querySelector("#scheduleTable tbody");
-      tbody.innerHTML = "";
-      days.forEach(day => {
-        const row = document.createElement("tr");
-        row.innerHTML = `<td>${day}</td>` + schedule[day].map(t => `<td>${formatTime(t)}</td>`).join("");
-        tbody.appendChild(row);
-      });
+    function updateScheduleList() {
+      const container = document.getElementById("scheduleList");
+      container.innerHTML = days.map(day => formatRanges(day, schedule[day])).join("");
     }
 
     function isOpenNow() {
@@ -247,12 +262,12 @@
         ]);
       });
       localStorage.setItem("makolletSchedule", JSON.stringify(schedule));
-      updateTable();
+      updateScheduleList();
       updateStatus();
       alert("השעות נשמרו!");
     }
 
-    updateTable();
+    updateScheduleList();
     updateStatus();
     setInterval(updateStatus, 60000);
   </script>
