@@ -70,16 +70,18 @@
     .closed-now {
       color: #a94442;
     }
+
     #scheduleList {
-      margin-top: 2rem;
       background: var(--surface);
       padding: 1rem;
       border-radius: 12px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      margin-bottom: 2rem;
     }
         .day-row {
       margin-bottom: 0.75rem;
       font-size: 1.15rem;
+      line-height: 1.6;
     }
     .highlight-open {
       background-color: #d4edda;
@@ -101,7 +103,7 @@
       border-radius: 12px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
-    .admin-button {
+        .admin-button {
       position: fixed;
       bottom: 4rem;
       left: 1rem;
@@ -147,7 +149,47 @@
       color: var(--primary-dark);
       font-size: 1.1rem;
       vertical-align: middle;
+    }
+
+    .flipped {
       transform: scaleX(-1);
+      display: inline-block;
+    }
+
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 1.6rem;
+      }
+
+      .open-now, .closed-now {
+        font-size: 2.2rem;
+      }
+
+      .day-row {
+        font-size: 1rem;
+      }
+
+      #status {
+        height: auto;
+        padding: 2rem 1rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      input[type="time"] {
+        width: 100%;
+        max-width: 100%;
+      }
+
+      label {
+        display: block;
+        margin: 0.5rem 0;
+      }
+
+      .admin-button {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+      }
     }
   </style>
 </head>
