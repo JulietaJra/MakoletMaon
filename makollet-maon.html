@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>מכולת מעון</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body { font-family: sans-serif; background: #fffaf0; margin: 0; padding: 1rem; color: #333; }
+    h1 { text-align: center; }
+    table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+    th, td { border: 1px solid #ccc; padding: 0.5rem; text-align: center; }
+    .open-now { color: green; font-weight: bold; }
+    .closed-now { color: red; font-weight: bold; }
+    #editSection { display: none; margin-top: 2rem; }
+    input[type="time"] { width: 100%; }
+    .admin-button { position: fixed; bottom: 1rem; left: 1rem; background: #8b5e3c; color: white; padding: 0.5rem 1rem; border: none; border-radius: 10px; }
+  </style>
+</head>
+<body>
+  <h1>מכולת מעון</h1>
+  <div id="status"></div>
+  <table id="scheduleTable">
+    <thead>
+      <tr><th>יום</th><th>פתיחה 1</th><th>סגירה 1</th><th>פתיחה 2</th><th>סגירה 2</th><th>פתיחה 3</th><th>סגירה 3</th></tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <button class="admin-button" onclick="toggleEdit()">🔒 עריכת שעות</button>
+  <div id="editSection">
+    <h2>עריכת שעות פתיחה</h2>
+    <form onsubmit="saveSchedule(event)">
+      <div id="editForm"></div>
+      <button type="submit">שמירה</button>
+    </form>
+  </div>
+
+  <script>
+    const days = ["ראשון", "שני", "שלישי", "רביעי", "חמישי", "שישי", "שבת"];
+    let schedule = JSON.parse(localStorage.getItem("makolletSchedule")) || {
+      "ראשון": ["07:30","13:30","16:00","19:00","",""],
+      "שני":   ["08:00","14:00","16:00","19:00","",""],
+      "שלישי": ["07:30","12:30","16:00","19:00","",""],
+      "רביעי": ["08:00","14:00","16:00","19:00","",""],
+      "חמישי": ["07:30","13:30","16:00","19:30","",""],
+      "שישי":  ["07:30","13:30","","","",""],
+      "שבת":  ["","","","","",""]
+    };
+
+    function formatTime(str) {
+      return str ? str : "—";
+    }
+
+    function updateTable() {
+      const tbody = document.querySelector("#scheduleTable tbody");
+      tbody.innerHTML = "";
+      days.forEach(day => {
+        const row = document.createElement("tr");
+        row.innerHTML = `<td>${day}</td>` + schedule[day].map(t => `<td>${formatTime(t)}</td>`).join("");
+        tbody.appendChild(row);
+      });
+    }
+
+    function isOpenNow() {
+      const now = new Date();
+      const currentDay = days[now.getDay()];
+      const currentTime = now.toTimeString().slice(0,5);
+      const ranges = schedule[currentDay];
+      for (let i = 0; i < ranges.length; i += 2) {
+        const start = ranges[i];
+        const end = ranges[i+1];
+        if (start && end && currentTime >= start && currentTime <= end) {
+          return { open: true, until: end };
+        }
+      }
+      return { open: false };
+    }
+
+    function updateStatus() {
+      const { open, until } = isOpenNow();
+      const statusDiv = document.getElementById("status");
+      if (open) {
+        statusDiv.innerHTML = `<p class='open-now'>המכולת פתוחה עכשיו (עד ${until})</p>`;
+      } else {
+        statusDiv.innerHTML = `<p class='closed-now'>המכולת סגורה עכשיו</p>`;
+      }
+    }
+
+    function toggleEdit() {
+      const pass = prompt("הכנס סיסמה לעדכון שעות:");
+      if (pass === "1234") {
+        const editSection = document.getElementById("editSection");
+        editSection.style.display = editSection.style.display === "none" ? "block" : "none";
+        renderEditForm();
+      } else {
+        alert("סיסמה שגויה.");
+      }
+    }
+
+    function renderEditForm() {
+      const container = document.getElementById("editForm");
+      container.innerHTML = "";
+      days.forEach(day => {
+        const values = schedule[day];
+        container.innerHTML += `
+          <h4>${day}</h4>
+          ${[0,1,2].map(i => `
+            <label>פתיחה ${i+1}: <input type="time" name="${day}-open${i+1}" value="${values[i*2]}"></label>
+            <label>סגירה ${i+1}: <input type="time" name="${day}-close${i+1}" value="${values[i*2+1]}"></label><br>`).join("")}
+        `;
+      });
+    }
+
+    function saveSchedule(e) {
+      e.preventDefault();
+      const form = e.target;
+      days.forEach(day => {
+        schedule[day] = [0,1,2].flatMap(i => [
+          form[`${day}-open${i+1}`].value,
+          form[`${day}-close${i+1}`].value
+        ]);
+      });
+      localStorage.setItem("makolletSchedule", JSON.stringify(schedule));
+      updateTable();
+      updateStatus();
+      alert("השעות נשמרו!");
+    }
+
+    updateTable();
+    updateStatus();
+    setInterval(updateStatus, 60000);
+  </script>
+</body>
+</html>
