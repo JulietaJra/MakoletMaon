@@ -23,9 +23,35 @@
       color: var(--text-color);
     }
 
-    h1, h2, h4 {
+    h1 {
       text-align: center;
+      font-size: 1.8rem;
       margin-bottom: 1rem;
+    }
+
+    #status {
+      height: 25vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--surface);
+      margin-bottom: 1rem;
+      border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    .open-now {
+      color: var(--primary);
+      font-weight: 700;
+      font-size: 2rem;
+      text-align: center;
+    }
+
+    .closed-now {
+      color: #d32f2f;
+      font-weight: 700;
+      font-size: 2rem;
+      text-align: center;
     }
 
     table {
@@ -47,20 +73,6 @@
     th {
       background-color: #f0f4f8;
       font-weight: 500;
-    }
-
-    .open-now {
-      color: var(--primary);
-      font-weight: bold;
-      font-size: 1.2rem;
-      text-align: center;
-    }
-
-    .closed-now {
-      color: #d32f2f;
-      font-weight: bold;
-      font-size: 1.2rem;
-      text-align: center;
     }
 
     #editSection {
@@ -122,6 +134,10 @@
       label {
         display: block;
         margin: 0.5rem 0;
+      }
+
+      .open-now, .closed-now {
+        font-size: 1.6rem;
       }
     }
   </style>
