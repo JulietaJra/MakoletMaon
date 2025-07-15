@@ -68,10 +68,30 @@
       border-radius: 12px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
+    #status {
+      text-align: center;
+      font-size: 1.3rem;
+      font-weight: bold;
+      margin: 1rem 0;
+      color: var(--primary-dark);
+    }
+    #scheduleList {
+      margin-top: 2rem;
+      background: var(--surface);
+      padding: 1rem;
+      border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .day-row {
+      margin-bottom: 0.75rem;
+      font-size: 1.15rem;
+    }
   </style>
 </head>
 <body>
   <h1>מכולת מעון</h1>
+  <div id="status"></div>
+  <div id="scheduleList"></div>
   <button class="admin-button" id="editToggle" onclick="toggleEdit()">🔒 עריכת שעות</button>
   <div id="editSection">
     <form onsubmit="saveSchedule(event)">
@@ -81,15 +101,69 @@
   </div>
   <script>
     const days = ["ראשון", "שני", "שלישי", "רביעי", "חמישי", "שישי", "שבת"];
-    let schedule = {
-      "ראשון": ["07:30","13:30","16:00","19:00","",""],
-      "שני":   ["08:00","14:00","16:00","19:00","",""],
-      "שלישי": ["07:30","12:30","16:00","19:00","",""],
-      "רביעי": ["08:00","14:00","16:00","19:00","",""],
-      "חמישי": ["07:30","13:30","16:00","19:30","",""],
-      "שישי":  ["07:30","13:30","","","",""],
-      "שבת":   ["","","","","",""]
-    };
+    let schedule = {};
+
+    async function loadSchedule() {
+      try {
+        const res = await fetch('schedule.json');
+        if (!res.ok) throw new Error('Response not ok');
+        schedule = await res.json();
+        updateScheduleList();
+        updateStatus();
+      } catch (e) {
+        document.getElementById("scheduleList").innerHTML = '<div style="color:red">שגיאה בטעינת לוח השעות</div>';
+        console.error("שגיאה בטעינת לוח השעות:", e);
+      }
+    }
+
+    function isOpenNow() {
+      const now = new Date();
+      const currentDay = days[now.getDay()];
+      const currentTime = now.toTimeString().slice(0,5);
+      const ranges = schedule[currentDay] || [];
+      for (let i = 0; i < ranges.length; i += 2) {
+        if (ranges[i] && ranges[i+1] && currentTime >= ranges[i] && currentTime <= ranges[i+1]) {
+          return { open: true, until: ranges[i+1] };
+        }
+      }
+      return { open: false };
+    }
+
+    function getNextOpening() {
+      const now = new Date();
+      const currentTime = now.toTimeString().slice(0,5);
+      const todayIndex = now.getDay();
+      for (let offset = 0; offset < 7; offset++) {
+        const dayIndex = (todayIndex + offset) % 7;
+        const dayName = days[dayIndex];
+        const ranges = schedule[dayName] || [];
+        for (let i = 0; i < ranges.length; i += 2) {
+          if (ranges[i]) {
+            if (offset === 0 && ranges[i] > currentTime) {
+              return { day: "היום", time: ranges[i] };
+            } else if (offset > 0) {
+              return { day: dayName, time: ranges[i] };
+            }
+          }
+        }
+      }
+      return null;
+    }
+
+    function updateStatus() {
+      const statusDiv = document.getElementById("status");
+      const nowStatus = isOpenNow();
+      if (nowStatus.open) {
+        statusDiv.innerText = `המכולת פתוחה עכשיו (עד ${nowStatus.until})`;
+      } else {
+        const next = getNextOpening();
+        if (next) {
+          statusDiv.innerText = `המכולת סגורה עכשיו. תיפתח שוב ${next.day} ב־${next.time}`;
+        } else {
+          statusDiv.innerText = "המכולת סגורה כעת.";
+        }
+      }
+    }
 
     function toggleEdit() {
       const pass = prompt("הכנס סיסמה לעדכון שעות:");
@@ -106,12 +180,12 @@
       const container = document.getElementById("editForm");
       container.innerHTML = "";
       days.forEach(day => {
-        const values = schedule[day];
+        const values = schedule[day] || ["", "", "", "", "", ""];
         container.innerHTML += `
           <h4>${day}</h4>
           ${[0,1,2].map(i => `
-            <label>פתיחה ${i+1}: <input class="time-text" type="text" pattern="^\\d{2}:\\d{2}$" name="${day}-open${i+1}" value="${values[i*2]}" required></label>
-            <label>סגירה ${i+1}: <input class="time-text" type="text" pattern="^\\d{2}:\\d{2}$" name="${day}-close${i+1}" value="${values[i*2+1]}" required></label><br>`).join("")}
+            <label>פתיחה ${i+1}: <input class="time-text" type="text" pattern="^\\d{2}:\\d{2}$" name="${day}-open${i+1}" value="${values[i*2] || ''}" required></label>
+            <label>סגירה ${i+1}: <input class="time-text" type="text" pattern="^\\d{2}:\\d{2}$" name="${day}-close${i+1}" value="${values[i*2+1] || ''}" required></label><br>`).join("")}
         `;
       });
     }
@@ -125,10 +199,34 @@
           form[`${day}-close${i+1}`].value
         ]);
       });
+      fetch("https://hook.eu1.make.com/r3a9k52is91lr2dvmtru81dh32d86sgm", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(schedule)
+      });
       document.getElementById("editSection").style.display = "none";
       document.getElementById("editToggle").style.display = "inline-block";
+      updateScheduleList();
+      updateStatus();
       alert("השעות נשמרו!");
     }
+
+    function updateScheduleList() {
+      const container = document.getElementById("scheduleList");
+      container.innerHTML = days.map(day => {
+        const times = schedule[day] || [];
+        const parts = [];
+        for (let i = 0; i < times.length; i += 2) {
+          if (times[i] && times[i+1]) {
+            parts.push(`${times[i]} - ${times[i+1]}`);
+          }
+        }
+        return `<div class="day-row">${day}: ${parts.length ? parts.join(", ") : "סגור"}</div>`;
+      }).join("");
+    }
+
+    loadSchedule();
+    setInterval(updateStatus, 60000);
   </script>
 </body>
 </html>
