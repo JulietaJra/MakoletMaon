@@ -28,12 +28,47 @@
       margin-bottom: 1rem;
       color: var(--primary);
     }
-        #status {
+#status {
+      height: 20vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: url('https://www.transparenttextures.com/patterns/paper-fibers.png') repeat var(--accent-bg);
+      margin-bottom: 1rem;
+      border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      padding: 1rem;
       text-align: center;
-      font-size: 1.3rem;
-      font-weight: bold;
-      margin: 1rem 0;
-      color: var(--primary-dark);
+    }
+
+    .open-now, .closed-now {
+      font-weight: 700;
+      font-size: 3rem;
+      line-height: 1.4;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-align: center;
+      flex-direction: column;
+    }
+
+    .open-now::before {
+      content: "\1F7E2";
+      font-size: 2rem;
+    }
+
+    .closed-now::before {
+      content: "\1F534";
+      font-size: 2rem;
+    }
+
+    .open-now {
+      color: var(--primary);
+    }
+
+    .closed-now {
+      color: #a94442;
     }
     #scheduleList {
       margin-top: 2rem;
