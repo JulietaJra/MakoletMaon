@@ -52,6 +52,8 @@
       display: flex;
       align-items: center;
       gap: 0.5rem;
+      text-align: center;
+      flex-direction: column;
     }
 
     .open-now::before {
@@ -254,6 +256,25 @@
       return { open: false };
     }
 
+    function getNextOpening() {
+      const now = new Date();
+      const currentTime = now.toTimeString().slice(0,5);
+      for (let offset = 0; offset < 7; offset++) {
+        const dayIndex = (now.getDay() + offset) % 7;
+        const dayName = days[dayIndex];
+        const ranges = schedule[dayName] || [];
+        for (let i = 0; i < ranges.length; i += 2) {
+          const start = ranges[i];
+          if (start && (offset > 0 || start > currentTime)) {
+            return offset === 0
+              ? `היא תיפתח שוב היום ב־${start}`
+              : `היא תיפתח ביום ${dayName} ב־${start}`;
+          }
+        }
+      }
+      return "אין שעות פתיחה קרובות";
+    }
+
     function formatRanges(day, times) {
       const now = new Date();
       const currentDay = days[now.getDay()];
@@ -281,7 +302,8 @@
       if (open) {
         statusDiv.innerHTML = `<p class='open-now'>המכולת פתוחה עכשיו (עד ${until})</p>`;
       } else {
-        statusDiv.innerHTML = `<p class='closed-now'>המכולת סגורה עכשיו</p>`;
+        const next = getNextOpening();
+        statusDiv.innerHTML = `<p class='closed-now'>המכולת סגורה עכשיו<br>${next}</p>`;
       }
     }
 
