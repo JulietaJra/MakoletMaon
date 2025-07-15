@@ -7,12 +7,13 @@
   <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --main-bg: #f6f8fa;
-      --primary: #0073ea;
-      --primary-dark: #005bb5;
-      --text-color: #1d1d1f;
-      --border-color: #d1d5db;
-      --surface: #ffffff;
+      --main-bg: #f4f1ed;
+      --primary: #8b5e3c;
+      --primary-dark: #6e462a;
+      --text-color: #3d2b1f;
+      --border-color: #d7c4aa;
+      --surface: #fffdf9;
+      --accent-bg: #e7dccf;
     }
 
     body {
@@ -25,16 +26,17 @@
 
     h1 {
       text-align: center;
-      font-size: 1.8rem;
+      font-size: 2rem;
       margin-bottom: 1rem;
+      color: var(--primary);
     }
 
     #status {
-      height: 25vh;
+      height: 20vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      background: var(--surface);
+      background: url('https://www.transparenttextures.com/patterns/paper-fibers.png') repeat var(--accent-bg);
       margin-bottom: 1rem;
       border-radius: 12px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
@@ -44,9 +46,22 @@
 
     .open-now, .closed-now {
       font-weight: 700;
-      font-size: 2rem;
+      font-size: 3rem;
       line-height: 1.4;
       margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .open-now::before {
+      content: "\1F7E2"; /* 🟢 */
+      font-size: 2rem;
+    }
+
+    .closed-now::before {
+      content: "\1F534"; /* 🔴 */
+      font-size: 2rem;
     }
 
     .open-now {
@@ -54,21 +69,25 @@
     }
 
     .closed-now {
-      color: #d32f2f;
+      color: #a94442;
     }
 
     #scheduleList {
       background: var(--surface);
       padding: 1rem;
       border-radius: 12px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
       margin-bottom: 2rem;
     }
 
     .day-row {
       margin-bottom: 0.75rem;
-      font-size: 1.1rem;
+      font-size: 1.15rem;
       line-height: 1.6;
+    }
+
+    .day-row strong {
+      color: var(--primary);
     }
 
     #editSection {
@@ -87,6 +106,8 @@
       border: 1px solid var(--border-color);
       border-radius: 6px;
       margin: 0.25rem;
+      background: var(--main-bg);
+      color: var(--text-color);
     }
 
     .admin-button {
@@ -126,11 +147,11 @@
 
     @media (max-width: 768px) {
       h1 {
-        font-size: 1.5rem;
+        font-size: 1.6rem;
       }
 
       .open-now, .closed-now {
-        font-size: 1.6rem;
+        font-size: 2.2rem;
       }
 
       .day-row {
@@ -194,7 +215,7 @@
           parts.push(`${times[i]} - ${times[i+1]}`);
         }
       }
-      return `<div class="day-row">${day}: ${parts.length ? parts.join(", ") : "סגור"}</div>`;
+      return `<div class="day-row"><strong>${day}:</strong> ${parts.length ? parts.join(", ") : "סגור"}</div>`;
     }
 
     function updateScheduleList() {
