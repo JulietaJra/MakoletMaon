@@ -15,7 +15,6 @@
       --surface: #fffdf9;
       --accent-bg: #e7dccf;
     }
-
     body {
       font-family: 'Rubik', sans-serif;
       background: var(--main-bg);
@@ -23,116 +22,12 @@
       padding: 1rem;
       color: var(--text-color);
     }
-
     h1 {
       text-align: center;
       font-size: 2rem;
       margin-bottom: 1rem;
       color: var(--primary);
     }
-
-    #status {
-      height: 20vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: url('https://www.transparenttextures.com/patterns/paper-fibers.png') repeat var(--accent-bg);
-      margin-bottom: 1rem;
-      border-radius: 12px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      padding: 1rem;
-      text-align: center;
-    }
-
-    .open-now, .closed-now {
-      font-weight: 700;
-      font-size: 3rem;
-      line-height: 1.4;
-      margin: 0;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      text-align: center;
-      flex-direction: column;
-    }
-
-    .open-now::before {
-      content: "\1F7E2";
-      font-size: 2rem;
-    }
-
-    .closed-now::before {
-      content: "\1F534";
-      font-size: 2rem;
-    }
-
-    .open-now {
-      color: var(--primary);
-    }
-
-    .closed-now {
-      color: #a94442;
-    }
-
-    #scheduleList {
-      background: var(--surface);
-      padding: 1rem;
-      border-radius: 12px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-      margin-bottom: 2rem;
-    }
-
-    .day-row {
-      margin-bottom: 0.75rem;
-      font-size: 1.15rem;
-      line-height: 1.6;
-    }
-
-    .highlight-open {
-      background-color: #d4edda;
-      border-radius: 4px;
-      padding: 0.3rem;
-      display: inline-block;
-    }
-
-    .highlight-closed {
-      background-color: #fff8d5;
-      border-radius: 4px;
-      padding: 0.3rem;
-      display: inline-block;
-    }
-
-    #editSection {
-      display: none;
-      margin-top: 2rem;
-      background: var(--surface);
-      padding: 1rem;
-      border-radius: 12px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    }
-
-    input.time-text {
-      width: 80px;
-      padding: 0.5rem;
-      border: 1px solid var(--border-color);
-      border-radius: 6px;
-      margin: 0.25rem;
-      background: var(--main-bg);
-      color: var(--text-color);
-      direction: ltr;
-      text-align: center;
-    }
-
-    input.time-text:invalid {
-      border-color: red;
-      background-color: #ffe6e6;
-    }
-
-    input.time-text:valid {
-      border-color: var(--border-color);
-      background-color: var(--main-bg);
-    }
-
     .admin-button {
       position: fixed;
       bottom: 4rem;
@@ -147,78 +42,93 @@
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
       transition: background 0.3s ease;
     }
-
     .admin-button:hover {
       background: var(--primary-dark);
     }
-
-    form button[type="submit"] {
-      background: var(--primary);
-      color: white;
-      padding: 0.6rem 1.2rem;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 500;
-      margin-top: 1rem;
+    input.time-text {
+      width: 80px;
+      padding: 0.5rem;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      margin: 0.25rem;
+      background: var(--main-bg);
+      color: var(--text-color);
+      direction: ltr;
+      text-align: center;
     }
-
-    label {
-      margin: 0.25rem 0.5rem;
-      display: inline-block;
+    input.time-text:invalid {
+      border-color: red;
+      background-color: #ffe6e6;
     }
-
-    .today-icon {
-      display: inline-block;
-      margin-right: 0.4rem;
-      color: var(--primary-dark);
-      font-size: 1.1rem;
-      vertical-align: middle;
-    }
-
-    .flipped {
-      transform: scaleX(-1);
-      display: inline-block;
-    }
-
-    @media (max-width: 768px) {
-      h1 {
-        font-size: 1.6rem;
-      }
-
-      .open-now, .closed-now {
-        font-size: 2.2rem;
-      }
-
-      .day-row {
-        font-size: 1rem;
-      }
-
-      #status {
-        height: auto;
-        padding: 2rem 1rem;
-      }
-    }
-
-    @media (max-width: 480px) {
-      input.time-text {
-        width: 100%;
-        max-width: 100%;
-      }
-
-      label {
-        display: block;
-        margin: 0.5rem 0;
-      }
-
-      .admin-button {
-        padding: 0.5rem 1rem;
-        font-size: 0.9rem;
-      }
+    #editSection {
+      display: none;
+      margin-top: 2rem;
+      background: var(--surface);
+      padding: 1rem;
+      border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
   </style>
 </head>
 <body>
-  <!-- התוכן המעודכן ייכנס כאן -->
+  <h1>מכולת מעון</h1>
+  <button class="admin-button" id="editToggle" onclick="toggleEdit()">🔒 עריכת שעות</button>
+  <div id="editSection">
+    <form onsubmit="saveSchedule(event)">
+      <div id="editForm"></div>
+      <button type="submit">שמירה</button>
+    </form>
+  </div>
+  <script>
+    const days = ["ראשון", "שני", "שלישי", "רביעי", "חמישי", "שישי", "שבת"];
+    let schedule = {
+      "ראשון": ["07:30","13:30","16:00","19:00","",""],
+      "שני":   ["08:00","14:00","16:00","19:00","",""],
+      "שלישי": ["07:30","12:30","16:00","19:00","",""],
+      "רביעי": ["08:00","14:00","16:00","19:00","",""],
+      "חמישי": ["07:30","13:30","16:00","19:30","",""],
+      "שישי":  ["07:30","13:30","","","",""],
+      "שבת":   ["","","","","",""]
+    };
+
+    function toggleEdit() {
+      const pass = prompt("הכנס סיסמה לעדכון שעות:");
+      if (pass === "1234") {
+        document.getElementById("editSection").style.display = "block";
+        document.getElementById("editToggle").style.display = "none";
+        renderEditForm();
+      } else {
+        alert("סיסמה שגויה.");
+      }
+    }
+
+    function renderEditForm() {
+      const container = document.getElementById("editForm");
+      container.innerHTML = "";
+      days.forEach(day => {
+        const values = schedule[day];
+        container.innerHTML += `
+          <h4>${day}</h4>
+          ${[0,1,2].map(i => `
+            <label>פתיחה ${i+1}: <input class="time-text" type="text" pattern="^\\d{2}:\\d{2}$" name="${day}-open${i+1}" value="${values[i*2]}" required></label>
+            <label>סגירה ${i+1}: <input class="time-text" type="text" pattern="^\\d{2}:\\d{2}$" name="${day}-close${i+1}" value="${values[i*2+1]}" required></label><br>`).join("")}
+        `;
+      });
+    }
+
+    function saveSchedule(e) {
+      e.preventDefault();
+      const form = e.target;
+      days.forEach(day => {
+        schedule[day] = [0,1,2].flatMap(i => [
+          form[`${day}-open${i+1}`].value,
+          form[`${day}-close${i+1}`].value
+        ]);
+      });
+      document.getElementById("editSection").style.display = "none";
+      document.getElementById("editToggle").style.display = "inline-block";
+      alert("השעות נשמרו!");
+    }
+  </script>
 </body>
 </html>
