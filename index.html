@@ -92,6 +92,26 @@
       margin-bottom: 0.75rem;
       font-size: 1.15rem;
     }
+    .highlight-open {
+      background-color: #d4edda;
+      border-radius: 4px;
+      padding: 0.3rem;
+      display: inline-block;
+    }
+    .highlight-closed {
+      background-color: #fff8d5;
+      border-radius: 4px;
+      padding: 0.3rem;
+      display: inline-block;
+    }
+    .today-icon {
+      display: inline-block;
+      margin-right: 0.4rem;
+      color: var(--primary-dark);
+      font-size: 1.1rem;
+      vertical-align: middle;
+      transform: scaleX(-1);
+    }
   </style>
 </head>
 <body>
@@ -160,13 +180,13 @@
       const statusDiv = document.getElementById("status");
       const nowStatus = isOpenNow();
       if (nowStatus.open) {
-        statusDiv.innerText = `המכולת פתוחה עכשיו (עד ${nowStatus.until})`;
+        statusDiv.innerHTML = `<p class='open-now'>המכולת פתוחה עכשיו (עד ${nowStatus.until})</p>`;
       } else {
         const next = getNextOpening();
         if (next) {
-          statusDiv.innerText = `המכולת סגורה עכשיו. תיפתח שוב ${next.day} ב־${next.time}`;
+          statusDiv.innerHTML = `<p class='closed-now'>המכולת סגורה עכשיו<br>היא תיפתח שוב ${next.day} ב־${next.time}</p>`;
         } else {
-          statusDiv.innerText = "המכולת סגורה כעת.";
+          statusDiv.innerHTML = "<p class='closed-now'>המכולת סגורה כעת.</p>";
         }
       }
     }
@@ -191,8 +211,8 @@
           <h4>${day}</h4>
           ${[0,1,2].map(i => `
             <div class="time-row">
-              <label>מ־<input class="time-text" type="text" pattern="^\\d{2}:\\d{2}$" name="${day}-open${i+1}" value="${values[i*2] || ''}" required></label>
-              <label>עד <input class="time-text" type="text" pattern="^\\d{2}:\\d{2}$" name="${day}-close${i+1}" value="${values[i*2+1] || ''}" required></label>
+              <label>מ־<input class="time-text" type="text" pattern="^\\d{2}:\\d{2}$" name="${day}-open${i+1}" value="${values[i*2] || ''}"></label>
+              <label>עד <input class="time-text" type="text" pattern="^\\d{2}:\\d{2}$" name="${day}-close${i+1}" value="${values[i*2+1] || ''}" ${values[i*2] ? 'required' : ''}></label>
             </div>`).join("")}
         `;
       });
@@ -221,6 +241,8 @@
 
     function updateScheduleList() {
       const container = document.getElementById("scheduleList");
+      const now = new Date();
+      const currentDay = days[now.getDay()];
       container.innerHTML = days.map(day => {
         const times = schedule[day] || [];
         const parts = [];
@@ -229,7 +251,10 @@
             parts.push(`${times[i]} - ${times[i+1]}`);
           }
         }
-        return `<div class="day-row">${day}: ${parts.length ? parts.join(", ") : "סגור"}</div>`;
+        const isToday = day === currentDay;
+        const icon = isToday ? '<span class="today-icon">➤</span> ' : '';
+        const rowClass = isToday ? (isOpenNow().open ? 'highlight-open' : 'highlight-closed') : '';
+        return `<div class="day-row ${rowClass}">${icon}${day}: ${parts.length ? parts.join(", ") : "סגור"}</div>`;
       }).join("");
     }
 
