@@ -157,11 +157,12 @@
         ]);
       });
 
-      fetch("https://hook.eu1.make.com/r3a9k52is91lr2dvmtru81dh32d86sgm", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(schedule)
-      }).then(() => alert("השעות נשמרו בהצלחה!"));
+    fetch("https://hook.eu1.make.com/r3a9k52is91lr2dvmtru81dh32d86sgm", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ payload: JSON.stringify(schedule) })
+    })
+    .then(() => alert("השעות נשמרו בהצלחה!"));
     }
   </script>
 </body>
