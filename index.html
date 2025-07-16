@@ -95,61 +95,6 @@
       padding: 0.3rem;
       display: inline-block;
     }
-      #editSection {
-      display: none;
-      margin-top: 2rem;
-      background: var(--surface);
-      padding: 1rem;
-      border-radius: 12px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    }
-
-    input[type="time"] {
-      width: 100%;
-      max-width: 120px;
-      padding: 0.5rem;
-      border: 1px solid var(--border-color);
-      border-radius: 6px;
-      margin: 0.25rem;
-      background: var(--main-bg);
-      color: var(--text-color);
-    }
-
-    .admin-button {
-      position: fixed;
-      bottom: 4rem;
-      left: 1rem;
-      background: var(--primary);
-      color: white;
-      padding: 0.6rem 1.2rem;
-      border: none;
-      border-radius: 50px;
-      font-size: 1rem;
-      cursor: pointer;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-      transition: background 0.3s ease;
-    }
-
-    .admin-button:hover {
-      background: var(--primary-dark);
-    }
-
-    form button[type="submit"] {
-      background: var(--primary);
-      color: white;
-      padding: 0.6rem 1.2rem;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 500;
-      margin-top: 1rem;
-    }
-
-    label {
-      margin: 0.25rem 0.5rem;
-      display: inline-block;
-    }
-
     .today-icon {
       display: inline-block;
       margin-right: 0.4rem;
@@ -157,42 +102,26 @@
       font-size: 1.1rem;
       vertical-align: middle;
     }
-
     .flipped {
       transform: scaleX(-1);
       display: inline-block;
     }
-
     @media (max-width: 768px) {
       h1 {
         font-size: 1.6rem;
       }
-
       .open-now, .closed-now {
         font-size: 2.2rem;
       }
-
       .day-row {
         font-size: 1rem;
       }
-
       #status {
         height: auto;
         padding: 2rem 1rem;
       }
     }
-
     @media (max-width: 480px) {
-      input[type="time"] {
-        width: 100%;
-        max-width: 100%;
-      }
-
-      label {
-        display: block;
-        margin: 0.5rem 0;
-      }
-
       .admin-button {
         padding: 0.5rem 1rem;
         font-size: 0.9rem;
@@ -204,19 +133,9 @@
   <h1>מכולת מעון</h1>
   <div id="status"></div>
   <div id="scheduleList"></div>
-
-  <button class="admin-button" onclick="toggleEdit()">🔒 עריכת שעות</button>
-  <div id="editSection">
-    <h2>עריכת שעות פתיחה</h2>
-    <form onsubmit="saveSchedule(event)">
-      <div id="editForm"></div>
-      <button type="submit">שמירה</button>
-    </form>
-  </div>
   <footer style="text-align: center; font-size: 0.75rem; color: #7b6a58; padding: 0.5rem 0; position: relative; margin-top: 3rem;">
     כל הזכויות שמורות לחולייטה חרמוי <a href="tel:052-441-5166" style="color: inherit; text-decoration: underline dotted;">052-441-5166</a>
   </footer>
-
   <script>
     const days = ["ראשון", "שני", "שלישי", "רביעי", "חמישי", "שישי", "שבת"];
     let schedule = {};
@@ -297,53 +216,6 @@
         const next = getNextOpening();
         statusDiv.innerHTML = `<p class='closed-now'>המכולת סגורה עכשיו<br>${next}</p>`;
       }
-    }
-
-    function toggleEdit() {
-      const pass = prompt("הכנס סיסמה לעדכון שעות:");
-      if (pass === "1234") {
-        document.getElementById("editSection").style.display = "block";
-        renderEditForm();
-      } else {
-        alert("סיסמה שגויה.");
-      }
-    }
-
-    function renderEditForm() {
-      const container = document.getElementById("editForm");
-      container.innerHTML = "";
-      days.forEach(day => {
-        const values = schedule[day] || ["", "", "", "", "", ""];
-        container.innerHTML += `
-          <h4>${day}</h4>
-          ${[0,1,2].map(i => `
-            <label>פתיחה ${i+1}: <input type="time" name="${day}-open${i+1}" value="${values[i*2]}"></label>
-            <label>סגירה ${i+1}: <input type="time" name="${day}-close${i+1}" value="${values[i*2+1]}"></label><br>`).join("")}
-        `;
-      });
-    }
-
-    function saveSchedule(e) {
-      e.preventDefault();
-      const form = e.target;
-      days.forEach(day => {
-        schedule[day] = [0,1,2].flatMap(i => [
-          form[`${day}-open${i+1}`].value,
-          form[`${day}-close${i+1}`].value
-        ]);
-      });
-      updateScheduleList();
-      updateStatus();
-
-      fetch("https://hook.eu1.make.com/r3a9k52is91lr2dvmtru81dh32d86sgm", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(schedule)
-      })
-      .then(res => res.ok ? alert("השעות נשמרו ונשלחו!") : alert("שמירה נכשלה"))
-      .catch(() => alert("שגיאה בשליחה לשרת"));
     }
   </script>
 </body>
