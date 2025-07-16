@@ -140,7 +140,7 @@
     const days = ["ראשון", "שני", "שלישי", "רביעי", "חמישי", "שישי", "שבת"];
     let schedule = {};
 
-    fetch(`schedule.json?ts=${Date.now()}`)
+    fetch('schedule.json')
       .then(response => response.json())
       .then(data => {
         schedule = data;
