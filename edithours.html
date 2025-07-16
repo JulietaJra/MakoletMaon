@@ -29,16 +29,15 @@
     }
     .time-row {
       display: flex;
-      flex-wrap: wrap;
+      flex-wrap: nowrap;
       align-items: center;
+      gap: 0.5rem;
       margin-bottom: 1rem;
     }
     .time-row label {
       display: flex;
       align-items: center;
-    }
-    .time-row label:first-child {
-      margin-left: 3.5rem; /* This creates a space equal to width of "עד" label */
+      white-space: nowrap;
     }
     .time-row input[type="text"] {
       width: 80px;
@@ -77,11 +76,11 @@
     }
     @media screen and (max-width: 600px) {
       .time-row {
-        flex-direction: column;
-        align-items: flex-start;
+        flex-wrap: wrap;
+        gap: 0.3rem;
       }
       .time-row label {
-        width: 100%;
+        flex: 1 1 auto;
         margin-left: 0;
       }
     }
